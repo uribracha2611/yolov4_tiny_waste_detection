@@ -1,5 +1,5 @@
 tensorflow
 numpy
 pyqt5
-PIL
+pillow
 opencv-python
