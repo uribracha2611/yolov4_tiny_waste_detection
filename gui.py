@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot, QThread, QObject, pyqtSignal, QMutex, QUrl
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import *
@@ -20,7 +22,8 @@ class Worker(QThread):
     def run(self):
         self._mutex.lock()
         img = Image.open(file_save_path)
-
+        if not Path("saves").exists():
+            os.mkdir("saves")
 
         img_path_for_pred = Path("saves/" + time.strftime("%Y%m%d-%H%M%S") + ".jpg")
         img.save(str(img_path_for_pred))
