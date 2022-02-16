@@ -104,7 +104,7 @@ class Gui:
 
         self.image_show.setPixmap(pix)
         self.image_show.adjustSize()
-        self.submit.move(350,200+pix.height())
+        self.submit.move(350,75+pix.height())
 
     def submit_func(self):
             # Step 2: Create a QThread object
