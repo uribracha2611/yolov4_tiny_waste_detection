@@ -104,7 +104,7 @@ class Gui:
 
         self.image_show.setPixmap(pix)
         self.image_show.adjustSize()
-        self.submit.move(350,75+pix.height())
+        self.submit.move(350,200+pix.height())
 
     def submit_func(self):
             # Step 2: Create a QThread object
@@ -119,7 +119,7 @@ class Gui:
             pix =pix.scaled (350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
         self.image_result.setPixmap(pix)
         self.image_result.adjustSize()
-        self.image_result.move(350,self.button.height()+self.button.y()+pix.height()+150)
+        self.image_result.move(350,self.button.height()+self.button.y()+pix.height()+75)
 
 if __name__ == '__main__':
     g = Gui()
