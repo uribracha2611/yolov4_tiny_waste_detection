@@ -113,10 +113,10 @@ class Gui:
 
     def edit_image(self,t):
         pix=QPixmap(t)
-        if pix.height()>256:
-            pix =pix.scaled (pix.width(), 256, Qt.KeepAspectRatio, Qt.FastTransformation)
-        if pix.width()>256:
-            pix =pix.scaled (256, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
+        if pix.height()>350:
+            pix =pix.scaled (pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
+        if pix.width()>350:
+            pix =pix.scaled (350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
         self.image_result.setPixmap(pix)
         self.image_result.adjustSize()
         self.image_result.move(350,self.button.height()+self.button.y()+pix.height()+150)
