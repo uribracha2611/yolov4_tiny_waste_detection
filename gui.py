@@ -97,10 +97,10 @@ class Gui:
         file_save_path = file
         self.file_text.setText(path.name)
         pix=QPixmap(file)
-        if pix.height()>500:
-            pix =pix.scaled (pix.width(), 500, Qt.KeepAspectRatio, Qt.FastTransformation)
-        if pix.width()>500:
-            pix =pix.scaled (500, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
+        if pix.height()>350:
+            pix =pix.scaled (pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
+        if pix.width()>350:
+            pix =pix.scaled (350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
 
         self.image_show.setPixmap(pix)
         self.image_show.adjustSize()
@@ -119,7 +119,7 @@ class Gui:
             pix =pix.scaled (350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
         self.image_result.setPixmap(pix)
         self.image_result.adjustSize()
-        self.image_result.move(350,self.button.height()+self.button.y()+pix.height()+75)
+        self.image_result.move(350,self.button.height()+self.button.y()+pix.height()+200)
 
 if __name__ == '__main__':
     g = Gui()
