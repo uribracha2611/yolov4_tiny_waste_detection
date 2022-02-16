@@ -1,6 +1,6 @@
 import os
 
-from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot, QThread, QObject, pyqtSignal, QMutex, QUrl
+from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot, QThread, QObject, pyqtSignal, QMutex, QUrl,Qt
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -97,6 +97,10 @@ class Gui:
         file_save_path = file
         self.file_text.setText(path.name)
         pix=QPixmap(file)
+        if pix.height()>500:
+            pix =pix.scaled (pix.width(), 500, Qt.KeepAspectRatio, Qt.FastTransformation)
+        if pix.width()>500:
+            pix =pix.scaled (500, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
 
         self.image_show.setPixmap(pix)
         self.image_show.adjustSize()
@@ -109,6 +113,10 @@ class Gui:
 
     def edit_image(self,t):
         pix=QPixmap(t)
+        if pix.height()>256:
+            pix =pix.scaled (pix.width(), 256, Qt.KeepAspectRatio, Qt.FastTransformation)
+        if pix.width()>256:
+            pix =pix.scaled (256, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
         self.image_result.setPixmap(pix)
         self.image_result.adjustSize()
         self.image_result.move(350,self.button.height()+self.button.y()+pix.height()+150)
