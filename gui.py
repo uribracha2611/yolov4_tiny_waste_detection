@@ -41,11 +41,11 @@ class Gui:
         global  file_save_path #file path of chosen image, used later
         file_save_path=None
         #most of the following lines builds the Parts of the gui
-        #QApplication is for the application, Qlabel is for showing chosen_image_name, QPushButton is for button
+        #QApplication is for the application, Qlabel is for showing text and images, QPushButton is for buttons
         #setFont is function to set the font,
         # #setText sets the text of move places the widgit in the gui and
         # connect connects a function to somthing that happens (usually click
-        self.app = QApplication(sys.argv)
+        self.app = QApplication(sys.argv) # creating application
         self.win = QMainWindow()
         self.win.setGeometry(200, 200, 1200, 1200)
         width, height = self.win.frameGeometry().width(), self.win.frameGeometry().height()
@@ -76,24 +76,24 @@ class Gui:
         self.file_text.adjustSize()
         self.file_text.move(500, 75)
 
-        self.submit = QPushButton(self.win) # button to activate processing function(model)
-        self.submit.setText("process")
-        self.submit.setFont(QFont("Times", 14))
-        self.submit.adjustSize()
-        self.submit.clicked.connect(self.submit_func)
-        self.submit.move(350, 175)
+        self.process_button = QPushButton(self.win) # button to activate processing function(model)
+        self.process_button.setText("process")
+        self.process_button.setFont(QFont("Times", 14))
+        self.process_button.adjustSize()
+        self.process_button.clicked.connect(self.process_func)
+        self.process_button.move(350, 175)
 
 
-        self.image_show = QLabel(self.win)
+        self.image_show = QLabel(self.win) #label that  shows the chosen image
         self.image_show.move(350, 175)
 
-        self.image_result=QLabel(self.win)
+        self.image_result=QLabel(self.win) # label that shows image after model processing
 
-        self.image_result = QLabel(self.win)
 
-        self.win.show()
-        sys.exit(self.app.exec_())
+        self.win.show() # activiting gui
+        sys.exit(self.app.exec_())  # code for exiting gui when close is clicked
 
+# function that runs when browse_button is clicked, opens fil
     def file_dialog(self):
         global file_save_path
         file, check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "")
@@ -109,9 +109,9 @@ class Gui:
 
         self.image_show.setPixmap(pix)
         self.image_show.adjustSize()
-        self.submit.move(350,200+pix.height())
+        self.process_button.move(350,200+pix.height())
 
-    def submit_func(self):
+    def process_func(self):
             # Step 2: Create a QThread object
             self.worker.image_path.connect(self.edit_image)
             self.worker.start()
