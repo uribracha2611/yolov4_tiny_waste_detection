@@ -93,23 +93,25 @@ class Gui:
         self.win.show() # activiting gui
         sys.exit(self.app.exec_())  # code for exiting gui when close is clicked
 
-# function that runs when browse_button is clicked, opens fil
+# function that runs when browse_button is clicked, opens file dialog for choosing image file
+    # takes the file and shows the image on the gui
     def file_dialog(self):
-        global file_save_path
-        file, check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "")
+        global file_save_path # this variable keeps the file path to the chosen image, it is global becuase it is used in Worker class
+        file, check = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "") #opens file dialog
 
         path = Path(file)
-        file_save_path = file
-        self.file_text.setText(path.name)
-        pix=QPixmap(file)
+        file_save_path = file #  sets the global variable
+        self.file_text.setText(path.name) #sets the label
+        pix=QPixmap(file) #create map of pixels for use in label
+        #height and width regularizion for pixelmap
         if pix.height()>350:
             pix =pix.scaled (pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
         if pix.width()>350:
             pix =pix.scaled (350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
 
-        self.image_show.setPixmap(pix)
+        self.image_show.setPixmap(pix) # sets label to map
         self.image_show.adjustSize()
-        self.process_button.move(350,200+pix.height())
+        self.process_button.move(350,200+pix.height()) # moves the button so it isn't covered
 
     def process_func(self):
             # Step 2: Create a QThread object
