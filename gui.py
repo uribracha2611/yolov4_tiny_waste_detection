@@ -113,13 +113,14 @@ class Gui:
         self.image_show.adjustSize()
         self.process_button.move(350,200+pix.height()) # moves the button so it isn't covered
 
+#function that runs when the process button is clicked, it's only is use is activating the thread
     def process_func(self):
-            # Step 2: Create a QThread object
-            self.worker.image_path.connect(self.edit_image)
-            self.worker.start()
+            self.worker.image_path.connect(self.edit_image) # sets the function that is run after the processing is done
+            self.worker.start() #starts the running of the thread
 
-    def edit_image(self,t):
-        pix=QPixmap(t)
+#function that shows the image with the bounding boxes
+    def edit_image(self, file_image_path):
+        pix=QPixmap(file_image_path)
         if pix.height()>350:
             pix =pix.scaled (pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
         if pix.width()>350:
