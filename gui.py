@@ -42,7 +42,9 @@ class Gui:
         file_save_path=None
         #most of the following lines builds the Parts of the gui
         #QApplication is for the application, Qlabel is for showing chosen_image_name, QPushButton is for button
-        #setFont is function to set the font, #setText sets the text of the widgit,
+        #setFont is function to set the font,
+        # #setText sets the text of move places the widgit in the gui and
+        # connect connects a function to somthing that happens (usually click
         self.app = QApplication(sys.argv)
         self.win = QMainWindow()
         self.win.setGeometry(200, 200, 1200, 1200)
@@ -69,12 +71,12 @@ class Gui:
         self.browse_button.move(350, 75)
         self.browse_button.clicked.connect(self.file_dialog)
 
-        self.file_text = QLabel(" file not chosen ...", self.win)
+        self.file_text = QLabel(" file not chosen ...", self.win) # label for showing name of chosen file
         self.file_text.setFont(QFont("Times", 14))
         self.file_text.adjustSize()
         self.file_text.move(500, 75)
 
-        self.submit = QPushButton(self.win)
+        self.submit = QPushButton(self.win) # button to activate processing function(model)
         self.submit.setText("process")
         self.submit.setFont(QFont("Times", 14))
         self.submit.adjustSize()
