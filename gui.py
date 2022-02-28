@@ -61,23 +61,23 @@ class Gui:
         self.title.adjustSize()
         self.title.move((width // 4) + 50, 0)
 
-        self.chosen_image_name = QLabel(self.win)  # chosen_image_name for showing chosen image name
-        self.chosen_image_name.setFont(QFont("Times", 14))
-        self.chosen_image_name.setText("choose an image to process:")
-        self.chosen_image_name.move(50, 75)
-        self.chosen_image_name.adjustSize()
+        # self.chosen_image_name = QLabel(self.win)  # chosen_image_name for showing chosen image name
+        # self.chosen_image_name.setFont(QFont("Times", 14))
+        # self.chosen_image_name.setText("choose an image to process:")
+        # self.chosen_image_name.move(50, 75)
+        # self.chosen_image_name.adjustSize()
 
         self.browse_button = QPushButton(self.win)  # browse_button to allow browsing
         self.browse_button.setText("Browse..")
         self.browse_button.setFont(QFont("Times", 14))
         self.browse_button.adjustSize()
-        self.browse_button.move(350, 75)
+        self.browse_button.move(75, 75)
         self.browse_button.clicked.connect(self.file_dialog)
-
-        self.file_text = QLabel(" file not chosen ...", self.win)  # label for showing name of chosen file
-        self.file_text.setFont(QFont("Times", 14))
-        self.file_text.adjustSize()
-        self.file_text.move(500, 75)
+        #
+        # self.file_text = QLabel(" file not chosen ...", self.win)  # label for showing name of chosen file
+        # self.file_text.setFont(QFont("Times", 14))
+        # self.file_text.adjustSize()
+        # self.file_text.move(500, 75)
 
         self.process_button = QPushButton(self.win)  # button to activate processing function(model)
         self.process_button.setText("process")
@@ -86,9 +86,9 @@ class Gui:
         self.process_button.clicked.connect(self.process_func)
         self.process_button.move(350, 175)
 
-        self.image_show = QLabel(self.win)  # label that  shows the chosen image
-        self.image_show.move(350, 175)
-
+        # self.image_show = QLabel(self.win)  # label that  shows the chosen image
+        # self.image_show.move(350, 175)
+        #
         self.image_result = QLabel(self.win)  # label that shows image after model processing
 
         self.win.show()  # activating gui
