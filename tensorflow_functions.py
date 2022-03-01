@@ -91,3 +91,37 @@ def predict(image_path):
    new_img.save(save_name) #saving
    return save_name
 
+
+def predict_no_save(image_path):
+   model = tf.saved_model.load("model/yolov4-tiny-model", tags=[tag_constants.SERVING]) #loading model
+   orig_img = cv2.imread(image_path) #loading_image
+   orig_img = cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB)
+   orig_width, orig_height,_ = orig_img.shape
+   orig_img = cv2.resize(orig_img, (256, 256))#resizing
+   img = np.array(orig_img).astype(np.float32) #copy of image so that the original image stay intact
+   infer = model.signatures['serving_default']
+   #data_prepration
+   img = img / 255
+   img = np.expand_dims(img, 0)
+   img = tf.constant(img)
+   #predication
+   pred_bbox = infer(img)
+   for key, value in pred_bbox.items():
+       boxes = value[:, :, 0:4]
+       pred_conf = value[:, :, 4:]
+
+   boxes, scores, classes, valid_detections = tf.image.combined_non_max_suppression(
+       boxes=tf.reshape(boxes, (tf.shape(boxes)[0], -1, 1, 4)),
+       scores=tf.reshape(
+           pred_conf, (tf.shape(pred_conf)[0], -1, tf.shape(pred_conf)[-1])),
+       max_output_size_per_class=50,
+       max_total_size=50,
+       iou_threshold=0.2,
+       score_threshold=0.5
+   )
+   pred_bbox = [boxes.numpy(), scores.numpy(), classes.numpy(), valid_detections.numpy()]
+   #drawing bounding boxes and saving image
+   new_img = draw_bbox(orig_img, pred_bbox, show_label=True) #new image
+   new_img=cv2.resize(new_img,(orig_width,orig_height)) # resizing
+   return new_img
+
