@@ -1,5 +1,6 @@
 import os
 
+import cv2
 from PyQt5.QtCore import QThreadPool, QRunnable, pyqtSlot, QThread, QObject, pyqtSignal, QMutex, QUrl, Qt
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import *
@@ -19,7 +20,6 @@ class Worker(QThread):
         self._mutex = QMutex()  # QMutex is used to prevent mutation of the data used by the thread
 
         super().__init__()  # calling Qthread __init__()
-
     # function that runs the Thread and calls the predict function
     def run(self):
         self._mutex.lock()  # locking the data
@@ -36,8 +36,27 @@ class Worker(QThread):
 
         self.finished.emit()  # QThread requires this line
         self._mutex.unlock()  # unlocking the data used by the thread
+# thread for video showing during browse
+class worker_video_browse(QThread):
+    changePixmap = pyqtSignal(QImage) #signal for each frame
 
-
+    def run(self):
+        cap = cv2.VideoCapture(file_save_path)  # getting video
+        ret, frame = cap.read()  # reading frames
+        while ret:
+                # https://stackoverflow.com/a/55468544/6622587
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # changing frame to image
+                h, w, ch = rgbImage.shape # data of shape
+                bytesPerLine = ch * w
+                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888) #reformatting
+                p = convertToQtFormat.scaled(350, 350, Qt.KeepAspectRatio) #changing size of frame
+                self.changePixmap.emit(p) #sending frame to gui
+                QApplication.processEvents()
+                ret, frame = cap.read()
+        self.stop()
+    def stop(self):
+        self.threadactive = False
+        self.wait()
 # Class that manages the gui
 class Gui:
     def __init__(self):
@@ -54,7 +73,7 @@ class Gui:
         width, height = self.win.frameGeometry().width(), self.win.frameGeometry().height()
         self.win.setWindowTitle("School project Uri Bracha-Gui app")
         self.worker = Worker()
-
+        self.worker_video_browse=worker_video_browse()
         self.title = QLabel(self.win)  # title of the project
         self.title.setFont(QFont("Times", 14, QFont.Bold))
         self.title.setText("School project Uri Bracha-Gui app")
@@ -104,16 +123,25 @@ class Gui:
         path = Path(file)
         file_save_path = file  # sets the global variable
         self.file_text.setText(path.name)  # sets the label
-        pix = QPixmap(file)  # create map of pixels for use in label
-        # height and width regularization for pixel map
-        if pix.height() > 350:
-            pix = pix.scaled(pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
-        if pix.width() > 350:
-            pix = pix.scaled(350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
+        if path.suffix !=".avi" and path.suffix!=".mp4": #checks that file  is not video
+            pix = QPixmap(file)  # create map of pixels for use in label
+            # height and width regularization for pixel map
+            if pix.height() > 350:
+                pix = pix.scaled(pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
+            if pix.width() > 350:
+                pix = pix.scaled(350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
 
-        self.image_show.setPixmap(pix)  # sets label to map
-        self.image_show.adjustSize()
-        self.process_button.move(350, 200 + pix.height())  # moves the button so it isn't covered
+            self.image_show.setPixmap(pix)  # sets label to map
+            self.image_show.adjustSize()
+        else:
+            if self.worker_video_browse.isRunning():
+                self.worker_video_browse.stop()
+            # moves the button so it isn't covered
+            self.process_button.move(350, 600)
+            self.worker_video_browse.changePixmap.connect(self.show_browse_video)
+            self.worker_video_browse.run()
+
+
 
     # function that runs when the process button is clicked, it's only is use is activating the thread
     def process_func(self):
@@ -132,7 +160,9 @@ class Gui:
         self.image_result.adjustSize()
         self.image_result.move(350, self.browse_button.height() + self.browse_button.y() + pix.height() + 200)
         #moving it so it doesn't cover other things
-
-
+    #showing video during browse
+    def show_browse_video(self,image):
+        self.image_show.setPixmap(QPixmap.fromImage(image)) #sets the label to each frame as they come
+        self.image_show.adjustSize()
 if __name__ == '__main__':
     g = Gui()
