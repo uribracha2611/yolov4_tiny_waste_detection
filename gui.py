@@ -87,10 +87,11 @@ class Gui:
         self.process_button.move(350, 175)
 
         self.image_show = QLabel(self.win)  # label that  shows the chosen image
+
         self.image_show.move(350, 175)
 
         self.image_result = QLabel(self.win)  # label that shows image after model processing
-
+        self.image_result.setFont(QFont("Times", 14))
         self.win.show()  # activating gui
         sys.exit(self.app.exec_())  # code for exiting gui when close is clicked
 
@@ -111,12 +112,16 @@ class Gui:
         if pix.width() > 350:
             pix = pix.scaled(350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
 
-        self.image_show.setPixmap(pix)  # sets label to map
-        self.image_show.adjustSize()
         self.process_button.move(350, 200 + pix.height())  # moves the button so it isn't covered
-
+        self.image_show.setPixmap(pix)
+        self.image_show.adjustSize()
     # function that runs when the process button is clicked, it's only is use is activating the thread
     def process_func(self):
+        self.image_result.move(350, 250 + 350)
+        self.image_result.clear() #clear the image show of the imgae
+        self.image_result.setText("working ...")
+        self.image_result.move(350,250+350)
+        self.image_show.adjustSize()
         self.worker.image_path.connect(self.edit_image)  # sets the function that is run after the processing is done
         self.worker.start()  # starts the running of the thread
 
@@ -128,10 +133,12 @@ class Gui:
             pix = pix.scaled(pix.width(), 350, Qt.KeepAspectRatio, Qt.FastTransformation)
         if pix.width() > 350:
             pix = pix.scaled(350, pix.height(), Qt.KeepAspectRatio, Qt.FastTransformation)
-        self.image_result.setPixmap(pix) #sets the image to the label
+        self.image_result.clear() #clear label of text
+        self.image_result.setText("") #making sure text is cleared
+        self.image_result.setPixmap(pix)  # sets label to map
+
         self.image_result.adjustSize()
-        self.image_result.move(350, self.browse_button.height() + self.browse_button.y() + pix.height() + 200)
-        #moving it so it doesn't cover other things
+        self.image_result.move(350, self.browse_button.height() + self.browse_button.y() + pix.height() + 200)#moving it so it doesn't cover other things
 
 
 if __name__ == '__main__':
